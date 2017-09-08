@@ -10,34 +10,50 @@ import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
-import static android.Manifest.permission.READ_CONTACTS;
+
+import com.rikardo308.sharecontacts.Model.EmployeeInfo;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Cursor cursor;
-    ArrayList<String> vCard ;
-    String vfile;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 0;
+
+    private List<EmployeeInfo> employeeInfoList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private EmployeeInfoAdapter employeeInfoAdapter;
+
+    Cursor cursor ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        vfile = "Contacts" + "_" + System.currentTimeMillis()+".vcf";
-        //getRequestPermission();
+
+        recyclerView = (RecyclerView) findViewById(R.id.employee_recycler_view);
+        employeeInfoAdapter = new EmployeeInfoAdapter(employeeInfoList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(employeeInfoAdapter);
+
+        getRequestPermission();
     }
 
     private void getRequestPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
         }else{
-            getVcardString();
+            GetContactsIntoArrayList();
         }
     }
 
@@ -45,69 +61,23 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
         if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getVcardString();
+                GetContactsIntoArrayList();
             } else {
                 Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void getVcardString(){
-        vCard = new ArrayList<String>();
-        try{
-            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-            if(cursor!=null&&cursor.getCount()>0) {
-                cursor.moveToFirst();
-                for(int i =0;i<cursor.getCount();i++)
-                {
-
-                    get(cursor);
-                    Log.d("TAG", "Contact "+(i+1)+"VcF String is"+vCard.get(i));
-                    cursor.moveToNext();
-                }
-
-            }
-            else{
-                Log.d("TAG", "No Contacts in Your Phone");
-            }
-        }catch(Exception e){
-            Log.d("TAG", e.getMessage());
+    public void GetContactsIntoArrayList(){
+        cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null, null, null);
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String phonenumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            
+            EmployeeInfo employeeInfo = new EmployeeInfo(name, "", "","","",phonenumber);
+            employeeInfoList.add(employeeInfo);
         }
-    }
-
-    public void get(Cursor cursor){
-        String lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
-        Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_VCARD_URI, lookupKey);
-        AssetFileDescriptor fd;
-        try {
-            fd = this.getContentResolver().openAssetFileDescriptor(uri, "r");
-
-            // Your Complex Code and you used function without loop so how can you get all Contacts Vcard.??
-
-
-           /* FileInputStream fis = fd.createInputStream();
-            byte[] buf = new byte[(int) fd.getDeclaredLength()];
-            fis.read(buf);
-            String VCard = new String(buf);
-            String path = Environment.getExternalStorageDirectory().toString() + File.separator + vfile;
-            FileOutputStream out = new FileOutputStream(path);
-            out.write(VCard.toString().getBytes());
-            Log.d("Vcard",  VCard);*/
-
-            FileInputStream fis = fd.createInputStream();
-            byte[] buf = new byte[(int) fd.getDeclaredLength()];
-            fis.read(buf);
-            String vcardstring= new String(buf);
-            vCard.add(vcardstring);
-
-            String storage_path = Environment.getExternalStorageDirectory().toString() + File.separator + vfile;
-
-            Log.d("TAG", "STORAGE" + storage_path);
-            FileOutputStream mFileOutputStream = new FileOutputStream(storage_path, false);
-            mFileOutputStream.write(vcardstring.toString().getBytes());
-
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
+        cursor.close();
+        employeeInfoAdapter.notifyDataSetChanged();
     }
 }
