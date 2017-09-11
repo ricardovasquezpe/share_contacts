@@ -21,12 +21,11 @@ public class EmployeeInfoAdapter extends RecyclerView.Adapter<EmployeeInfoAdapte
 
         public MyViewHolder(View view) {
             super(view);
-            first_name = (TextView) view.findViewById(R.id.employee_first_name);
-            last_name = (TextView) view.findViewById(R.id.employee_last_name);
-            company = (TextView) view.findViewById(R.id.employee_compnay);
-            city = (TextView) view.findViewById(R.id.employee_city);
-            country = (TextView) view.findViewById(R.id.employee_country);
-            phone = (TextView) view.findViewById(R.id.employee_phone);
+            first_name = (TextView) view.findViewById(R.id.contact_first_name);
+            //last_name  = (TextView) view.findViewById(R.id.contact_last_name);
+            company    = (TextView) view.findViewById(R.id.contact_company);
+            //city       = (TextView) view.findViewById(R.id.contact_city);
+            phone      = (TextView) view.findViewById(R.id.contact_phone);
         }
     }
 
@@ -47,10 +46,10 @@ public class EmployeeInfoAdapter extends RecyclerView.Adapter<EmployeeInfoAdapte
     public void onBindViewHolder(MyViewHolder holder, int position) {
         EmployeeInfo employeeInfo = employeeInfoList.get(position);
         holder.first_name.setText(employeeInfo.getFirstName()+" ");
-        holder.last_name.setText(employeeInfo.getLastName());
+        //holder.last_name.setText(employeeInfo.getLastName());
         holder.company.setText(employeeInfo.getCompanyName());
-        holder.city.setText(employeeInfo.getCity()+", ");
-        holder.country.setText(employeeInfo.getCountry());
+        //holder.city.setText(employeeInfo.getCity()+", ");
+        //holder.country.setText(employeeInfo.getCountry());
         holder.phone.setText(employeeInfo.getPhoneNo());
 
     }
