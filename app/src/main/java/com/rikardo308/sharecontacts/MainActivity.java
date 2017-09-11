@@ -71,17 +71,10 @@ public class MainActivity extends AppCompatActivity {
     public void GetContactsIntoArrayList(){
         cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null, null, null);
         while (cursor.moveToNext()) {
-
-            String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String name        = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String phonenumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            /*String test = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_STATUS_TIMESTAMP));
-            test = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LAST_TIME_CONTACTED));
-            test = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.STATUS_LABEL));
-            test = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.STATUS_TIMESTAMP));
-            test = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.STATUS_ICON));*/
-            //Log.d("TAG", test);
 
-            EmployeeInfo employeeInfo = new EmployeeInfo(name, "", "","","",phonenumber);
+            EmployeeInfo employeeInfo = new EmployeeInfo(name, phonenumber);
             employeeInfoList.add(employeeInfo);
         }
         cursor.close();

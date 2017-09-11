@@ -34,16 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/contact_company"
-            android:text="Alan D Rosenburg Cpa Pc"
-            android:textSize="12sp"
             android:layout_below="@+id/contact_first_name"
-            android:layout_toEndOf="@+id/contact_checkbox" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/contact_company"
             android:id="@+id/contact_phone"
             android:layout_marginTop="2dp"
             android:text="St. Stephens Ward, "

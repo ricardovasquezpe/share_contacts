@@ -9,9 +9,6 @@ import com.rikardo308.sharecontacts.Model.EmployeeInfo;
 
 import java.util.List;
 
-/**
- * Created by Faizan Abbas on 11/11/2016.
- */
 public class EmployeeInfoAdapter extends RecyclerView.Adapter<EmployeeInfoAdapter.MyViewHolder> {
 
     private List<EmployeeInfo> employeeInfoList;
@@ -22,9 +19,6 @@ public class EmployeeInfoAdapter extends RecyclerView.Adapter<EmployeeInfoAdapte
         public MyViewHolder(View view) {
             super(view);
             first_name = (TextView) view.findViewById(R.id.contact_first_name);
-            //last_name  = (TextView) view.findViewById(R.id.contact_last_name);
-            company    = (TextView) view.findViewById(R.id.contact_company);
-            //city       = (TextView) view.findViewById(R.id.contact_city);
             phone      = (TextView) view.findViewById(R.id.contact_phone);
         }
     }
@@ -45,13 +39,8 @@ public class EmployeeInfoAdapter extends RecyclerView.Adapter<EmployeeInfoAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         EmployeeInfo employeeInfo = employeeInfoList.get(position);
-        holder.first_name.setText(employeeInfo.getFirstName()+" ");
-        //holder.last_name.setText(employeeInfo.getLastName());
-        holder.company.setText(employeeInfo.getCompanyName());
-        //holder.city.setText(employeeInfo.getCity()+", ");
-        //holder.country.setText(employeeInfo.getCountry());
+        holder.first_name.setText(employeeInfo.getFirstName());
         holder.phone.setText(employeeInfo.getPhoneNo());
-
     }
 
     @Override
